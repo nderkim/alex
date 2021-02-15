@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "Quicksand";
+  src: url("fonts/Quicksand-VariableFont_wght.woff2") format("woff2-variations");
+  font-weight: 300 700;
+}
+
+body {
+  background-color: #222;
+  color: #ddd;
+  font-family: "Quicksand", system-ui;
+}
+
+.root {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+img {
+  width: 64px;
+  height: 64px;
+}
