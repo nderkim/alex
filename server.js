@@ -1,22 +1,18 @@
 const path = require("path");
 
-const address = require("./src/address");
-const open = require("./src/open");
+const address = require("./lib/address");
+const open = require("./lib/open");
 
-const { createFileServer } = require(".");
-
-const host = "0.0.0.0";
-const port = 2539;
-const dirPath = path.join(__dirname, "public");
+const Server = require("./src/server");
 
 (async () => {
-  const fileServer = await createFileServer({
-    dirPath,
-    host,
-    port,
+  const server = await Server({
+    dirPath: path.join(__dirname, "public"),
+    host: "0.0.0.0",
+    port: 2539,
   });
 
-  // const { port } = fileServer.address();
+  const { port } = server.address();
 
   console.log(
     `listening at:
