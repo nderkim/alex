@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.base.json",
+  "display": "browser",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "types": []
+  }
+}
