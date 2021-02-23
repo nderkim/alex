@@ -6,7 +6,7 @@ module.exports = {
       excludedFiles: ["src/**"],
       env: {
         node: true,
-        es6: true, // automatically sets parserOptions.ecmaVersion to 6
+        es2021: true, // automatically sets parserOptions.ecmaVersion to 12
       },
       extends: ["eslint:recommended", "prettier"],
     },
