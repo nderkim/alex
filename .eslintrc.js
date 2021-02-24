@@ -3,7 +3,7 @@ module.exports = {
   overrides: [
     {
       files: ["**"],
-      excludedFiles: ["src/**"],
+      excludedFiles: ["client/**", "server/**"],
       env: {
         node: true,
         es2021: true, // automatically sets parserOptions.ecmaVersion to 12
@@ -11,10 +11,26 @@ module.exports = {
       extends: ["eslint:recommended", "prettier"],
     },
     {
-      files: ["src/**/*.ts"],
+      files: ["client/**/*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
-        tsconfigRootDir: "src",
+        tsconfigRootDir: "client",
+        project: ["tsconfig.json"],
+      },
+      plugins: ["@typescript-eslint"],
+      extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier",
+        "prettier/@typescript-eslint",
+      ],
+    },
+    {
+      files: ["server/**/*.ts"],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        tsconfigRootDir: "server",
         project: ["tsconfig.json"],
       },
       plugins: ["@typescript-eslint"],
