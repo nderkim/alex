@@ -1,4 +1,4 @@
 module.exports = {
   ...require("./webpack.browser.config"),
-  entry: "./client",
+  entry: "./src/client",
 };

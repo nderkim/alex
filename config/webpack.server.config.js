@@ -1,4 +1,4 @@
 module.exports = {
   ...require("./webpack.node.config"),
-  entry: "./server",
+  entry: "./src/server",
 };
