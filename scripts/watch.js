@@ -3,8 +3,8 @@ const path = require("path");
 
 const webpack = require("webpack");
 
-const configPath = path.resolve("./webpack.config");
-const config = require(configPath);
+const config = require(path.resolve("./webpack.config")); // relative to cwd
+
 const { watchOptions } = config;
 
 let childProcess;

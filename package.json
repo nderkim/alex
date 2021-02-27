@@ -23,10 +23,12 @@
     "cross-env": "^7.0.3",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
+    "html-webpack-plugin": "^5.2.0",
     "pkg": "^4.4.9",
     "prettier": "^2.2.1",
     "ts-loader": "^8.0.17",
     "typescript": "^4.1.5",
-    "webpack": "^5.23.0"
+    "webpack": "^5.23.0",
+    "webpack-dev-server": "^3.11.2"
   }
 }

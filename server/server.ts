@@ -1,7 +1,11 @@
 import http from "http";
 
+import Middleware from "../common/middleware";
+import { voidify } from "../common/types";
+
+import debugMiddleware from "./lib/debug-middleware";
 import HttpServer from "./lib/http-server";
-import RequestListener from "./lib/static-middleware";
+import staticMiddleware from "./lib/static-middleware";
 
 export default async (config: {
   dirPath: string;
@@ -10,8 +14,17 @@ export default async (config: {
 }): Promise<http.Server> => {
   const { dirPath, host, port } = config;
 
-  const requestListener = RequestListener(dirPath);
-  const server = await HttpServer(requestListener, { host, port });
+  const server = await HttpServer(
+    voidify(
+      Middleware([debugMiddleware, staticMiddleware(dirPath)], {
+        shouldBreak: (_req, res) => res.writableEnded,
+      })
+    ),
+    {
+      host,
+      port,
+    }
+  );
 
   return server;
 };

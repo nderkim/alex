@@ -2,32 +2,26 @@ import fs from "fs";
 import http from "http";
 import path from "path";
 
-const sendStatus = (res: http.ServerResponse, statusCode: number) => {
-  res.statusCode = statusCode;
-  // res.statusMessage = http.STATUS_CODES[statusCode]; // If this is left as undefined then the standard message for the status code will be used.
-  res.end();
-};
+import pipe from "./pipe";
 
-export default (dirPath: string) => (
+export default (dirPath: string) => async (
   req: http.IncomingMessage,
   res: http.ServerResponse
-): void => {
-  const { method, url } = req;
+): Promise<void> => {
+  const { url, method } = req;
 
-  if (method !== "GET") return sendStatus(res, 405); // Method Not Allowed
-  if (url === undefined) return sendStatus(res, 400); // Bad Request
+  if (!url || method !== "GET") return;
 
   const filePath = path.join(dirPath, url === "/" ? "index.html" : url);
   const fileStream = fs.createReadStream(filePath);
 
-  fileStream.on("error", (err: NodeJS.ErrnoException) => {
-    switch (err.code) {
-      default:
-        return sendStatus(res, 500); //Internal Server Error
-      case "ENOENT":
-        return sendStatus(res, 404); // Not Found
-    }
-  });
+  try {
+    await pipe(fileStream, res);
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") return; // No such file or directory
 
-  fileStream.pipe(res);
+    res.statusCode = 500; //Internal Server Error
+    // res.statusMessage = http.STATUS_CODES[res.statusCode]; // If this is left as undefined then the standard message for the status code will be used.
+    res.end();
+  }
 };

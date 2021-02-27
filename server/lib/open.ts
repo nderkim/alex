@@ -19,6 +19,6 @@ const command = (resource: string) => {
 };
 
 export default (resource: string): Promise<void> =>
-  new Promise<void>((resolve, reject) =>
+  new Promise((resolve, reject) =>
     exec(command(resource), (err) => (err ? reject(err) : resolve()))
   );
