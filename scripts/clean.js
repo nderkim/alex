@@ -3,7 +3,10 @@ const path = require("path");
 
 const ignoreDirectories = [".git"];
 const directories = ["node_modules", "dist", "build"];
-const files = ["package-lock.json", "yarn.lock"];
+const files = [
+  // "package-lock.json",
+  // "yarn.lock",
+];
 
 async function cleanDirent(dirent, direntPath) {
   if (dirent.isDirectory()) {

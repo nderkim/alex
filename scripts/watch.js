@@ -3,7 +3,7 @@ const path = require("path");
 
 const webpack = require("webpack");
 
-const config = require(path.resolve("./webpack.config")); // relative to cwd
+const config = require(path.resolve("./config/webpack.server.config")); // relative to cwd
 
 const { watchOptions } = config;
 
