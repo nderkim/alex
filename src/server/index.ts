@@ -1,8 +1,8 @@
 import net from "net";
 import path from "path";
 
-import getAddress from "./lib/address";
-import open from "./lib/open";
+import getAddress from "../node/address";
+import open from "../node/open";
 
 import Server from "./server";
 

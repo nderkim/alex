@@ -1,11 +1,11 @@
 import http from "http";
 
 import Middleware from "../common/middleware";
-import { voidify } from "../common/types";
+import voidify from "../common/voidify";
 
-import debugMiddleware from "./lib/debug-middleware";
-import HttpServer from "./lib/http-server";
-import staticMiddleware from "./lib/static-middleware";
+import debugMiddleware from "../node/debug-middleware";
+import HttpServer from "../node/http-server";
+import staticMiddleware from "../node/static-middleware";
 
 export default async (config: {
   dirPath: string;
