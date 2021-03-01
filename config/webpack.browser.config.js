@@ -23,6 +23,14 @@ module.exports = {
         test: /\.(css|scss)$/i,
         use: ["style-loader", "css-loader", "postcss-loader"],
       },
+      {
+        test: /\.(png|jpg|jpeg|gif)$/i, // images
+        type: "asset/resource",
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i, // fonts
+        type: "asset/resource",
+      },
     ],
   },
   resolve: {

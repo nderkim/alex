@@ -6,6 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "target": "ESNext",
-    "types": []
+    "types": [],
+    "jsx": "react"
   }
 }

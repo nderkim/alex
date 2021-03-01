@@ -1,6 +1,7 @@
 @font-face {
   font-family: "Quicksand";
-  src: url("fonts/Quicksand-VariableFont_wght.woff2") format("woff2-variations");
+  src: url("assets/fonts/Quicksand-VariableFont_wght.woff2")
+    format("woff2-variations");
   font-weight: 300 700;
 }
 
@@ -10,7 +11,7 @@ body {
   font-family: "Quicksand", system-ui;
 }
 
-.root {
+#root {
   position: absolute;
   top: 0;
   right: 0;
@@ -21,9 +22,4 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-img {
-  width: 64px;
-  height: 64px;
 }
