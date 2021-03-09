@@ -1,0 +1,16 @@
+.terminal {
+  background-color: black;
+  color: green;
+  height: 320px;
+  width: 480px;
+  padding: 8px;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .input {
+    outline: none;
+  }
+}

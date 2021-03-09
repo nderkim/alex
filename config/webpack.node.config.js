@@ -22,7 +22,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [".ts", "js"],
+    extensions: [".ts", ".js"],
   },
   plugins: [
     new CleanWebpackPlugin(), // clean output dir

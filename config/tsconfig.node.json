@@ -2,9 +2,9 @@
   "extends": "./tsconfig.base.json",
   "display": "node",
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "module": "CommonJS",
-    "target": "ESNext",
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "target": "esnext",
     "types": ["node"]
   }
 }

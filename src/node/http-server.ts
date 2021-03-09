@@ -1,11 +1,19 @@
 import http from "http";
+import net from "net";
+
+export type UpgradeListener = (
+  request: http.IncomingMessage,
+  socket: net.Socket,
+  head: Buffer
+) => void;
 
 export default async (
-  requestListener: http.RequestListener,
-  opts?: {
+  opts: {
     host?: string;
     port?: number;
-  }
+  } | null,
+  requestListener?: http.RequestListener,
+  upgradeListener?: UpgradeListener
 ): Promise<http.Server> => {
   const {
     host = "localhost",
@@ -13,6 +21,8 @@ export default async (
   } = opts ?? {};
 
   const server = http.createServer(requestListener);
+
+  if (upgradeListener) server.on("upgrade", upgradeListener);
 
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);
