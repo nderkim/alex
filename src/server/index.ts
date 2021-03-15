@@ -35,13 +35,15 @@ import { AddressInfo } from "net";
 
 import express from "express";
 
+import voidify from "../common/voidify";
+
 import getAddress from "../node/address";
 import open from "../node/open";
 
 import { router } from "./hmr";
 // import router from "./router";
 
-export default (middlewares: any[]) => {
+export default (middlewares: express.RequestHandler[]): void => {
   const app = express();
 
   app.use(router);
@@ -49,19 +51,22 @@ export default (middlewares: any[]) => {
 
   const server = http.createServer(app);
 
-  server.listen(3000, async (): void => {
-    const { port } = server.address() as AddressInfo; // assume TCP (not IPC)
+  server.listen(
+    3000,
+    voidify(async () => {
+      const { port } = server.address() as AddressInfo; // assume TCP (not IPC)
 
-    console.log(
-      `listening at:
+      console.log(
+        `listening at:
 - http://localhost:${port}`
-    );
+      );
 
-    const address = getAddress();
-    if (address) {
-      console.log(`- http://${address}:${port}`);
-    }
+      const address = getAddress();
+      if (address) {
+        console.log(`- http://${address}:${port}`);
+      }
 
-    await open(`http://localhost:${port}`);
-  });
+      await open(`http://localhost:${port}`);
+    })
+  );
 };

@@ -1,12 +1,16 @@
 import React from "react";
 
-export default () => {
+import voidify from "../../../common/voidify";
+
+const Component: React.FC = () => {
   const [data, setData] = React.useState<string>();
 
   React.useEffect(
-    async (): void => setData(await (await fetch("/hello")).text()),
+    voidify(async () => setData(await (await fetch("/hello")).text())),
     []
   );
 
   return <div>{data}</div>;
 };
+
+export default Component;

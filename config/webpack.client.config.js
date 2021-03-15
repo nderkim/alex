@@ -15,7 +15,7 @@ module.exports = {
     ),
   },
   output: {
-    path: path.resolve(isDev ? "./build" : "./dist"),
+    path: path.resolve(isDev ? "./build/client" : "./dist"),
     // filename: "[name].[contenthash].js",
   },
   module: {
@@ -45,7 +45,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(), // clean output dir
     // new CopyPlugin(),
-    new HtmlWebpackPlugin(), // create index.html,
+    new HtmlWebpackPlugin({ template: "src/client/index.ejs" }), // create index.html,
     // new MiniCssExtractPlugin(),
     isDev && new HotModuleReplacementPlugin(),
     isDev && new ReactRefreshWebpackPlugin(),
@@ -55,5 +55,5 @@ module.exports = {
     contentBase: false,
     // host: "0.0.0.0", // default: "localhost"
   },
-  devtool: "eval-source-map", // recommended
+  devtool: isDev && "eval-source-map", // recommended
 };

@@ -11,7 +11,7 @@ module.exports = {
     main: [isDev && "webpack/hot/poll?1000", "./src/server"].filter(Boolean),
   },
   output: {
-    path: path.resolve(isDev ? "./build" : "./dist"),
+    path: path.resolve(isDev ? "./build/server" : "./dist"),
     // filename: "[name].js", // main.js // default
     // publicPath: "/assets/",
     libraryTarget: "commonjs2",
