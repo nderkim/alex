@@ -1,19 +1,18 @@
 const path = require("path");
 
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const { HotModuleReplacementPlugin } = require("webpack");
 
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
+  target: "node",
   mode: process.env.NODE_ENV,
-  entry: {
-    main: [isDev && "webpack/hot/poll?1000", "./src/server"].filter(Boolean),
-  },
+  entry: isDev
+    ? ["webpack/hot/poll?1000", "./src/server/server"]
+    : "./src/server",
   output: {
-    path: path.resolve(isDev ? "./build/server" : "./dist"),
-    // filename: "[name].js", // main.js // default
-    // publicPath: "/assets/",
+    path: path.resolve(isDev ? "./build" : "./dist"),
+    filename: "index.js",
     libraryTarget: "commonjs2",
   },
   module: {
@@ -29,10 +28,7 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   plugins: [
-    new CleanWebpackPlugin(), // clean output dir
-    // new CopyPlugin(),
     isDev && new HotModuleReplacementPlugin(),
     // new BundleAnalyzerPlugin(),
-  ],
-  target: "node",
+  ].filter(Boolean),
 };

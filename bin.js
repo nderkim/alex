@@ -2,4 +2,4 @@
 
 // console.log(process.argv); // DEBUG
 
-require("./dist/main");
+require("./dist");

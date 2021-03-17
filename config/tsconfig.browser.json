@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "display": "browser",
   "compilerOptions": {
     "lib": ["esnext", "dom"],
     "module": "esnext",

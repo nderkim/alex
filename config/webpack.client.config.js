@@ -1,22 +1,20 @@
 const path = require("path");
 
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { HotModuleReplacementPlugin } = require("webpack");
 
 const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
+  // target: "web", // default
   mode: process.env.NODE_ENV,
-  entry: {
-    main: [isDev && "webpack-hot-middleware/client", "./src/client"].filter(
-      Boolean
-    ),
-  },
+  entry: [isDev && "webpack-hot-middleware/client", "./src/client"].filter(
+    Boolean
+  ),
   output: {
-    path: path.resolve(isDev ? "./build/client" : "./dist"),
-    // filename: "[name].[contenthash].js",
+    path: path.resolve(isDev ? "./build/public" : "./dist/public"),
   },
   module: {
     rules: [
@@ -43,13 +41,18 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   plugins: [
-    new CleanWebpackPlugin(), // clean output dir
-    // new CopyPlugin(),
-    new HtmlWebpackPlugin({ template: "src/client/index.ejs" }), // create index.html,
-    // new MiniCssExtractPlugin(),
     isDev && new HotModuleReplacementPlugin(),
     isDev && new ReactRefreshWebpackPlugin(),
     // new BundleAnalyzerPlugin(),
+    new HtmlWebpackPlugin({ template: "src/client/index.ejs" }), // create index.html,
+    // new MiniCssExtractPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "src/client/public",
+        },
+      ],
+    }),
   ].filter(Boolean),
   devServer: {
     contentBase: false,

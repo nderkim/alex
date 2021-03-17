@@ -28,7 +28,7 @@ const callback = (err, stats) => {
   );
 
   if (!isInitialised) {
-    require(path.join(stats.toJson().outputPath, "main.js")).default([
+    require(stats.toJson().outputPath).default([
       webpackDevMiddleware(clientCompiler),
       webpackHotMiddleware(clientCompiler),
     ]);

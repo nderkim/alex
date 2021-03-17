@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "display": "common",
   "compilerOptions": {
     "lib": ["esnext"],
     "types": []

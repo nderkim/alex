@@ -1,38 +1,80 @@
-import { spawn } from "child_process";
-import http from "http";
+// import net from "net";
+// import path from "path";
 
-import Middleware from "../common/middleware";
-import voidify from "../common/voidify";
+// import getAddress from "../node/address";
+// import open from "../node/open";
 
-import debugMiddleware from "../node/debug-middleware";
-import HttpServer from "../node/http-server";
-import StaticMiddleware from "../node/static-middleware";
-import WsUpgradeListener from "../node/ws-upgrade-listener";
+// import Server from "./server";
 
-export default async (config: {
-  dirPath: string;
-  host?: string;
-  port?: number;
-}): Promise<http.Server> => {
-  const { dirPath, host, port } = config;
+// const config = {
+//   dirPath: path.join(__dirname, "../public"),
+//   host: "0.0.0.0",
+//   port: 2539,
+// };
 
-  const server = await HttpServer(
-    {
-      host,
-      port,
-    },
-    voidify(
-      Middleware([debugMiddleware, StaticMiddleware(dirPath)], {
-        shouldBreak: (_req, res) => res.writableEnded,
-      })
-    ),
-    WsUpgradeListener((ws) => {
-      const sh = spawn("/bin/sh");
-      sh.stdout.on("data", (data: Buffer) => ws.send(data.toString()));
-      sh.stderr.on("data", (data: Buffer) => ws.send(data.toString()));
-      ws.onmessage = (e) => sh.stdin.write(e.data);
-    })
+// void (async () => {
+//   const server = await Server(config);
+
+//   const { port } = server.address() as net.AddressInfo; // HACK: assumes TCP (not IPC)
+
+//   console.log(
+//     `listening at:
+// - http://localhost:${port}`
+//   );
+
+//   const address = getAddress();
+//   if (address) {
+//     console.log(`- http://${address}:${port}`);
+//   }
+
+//   await open(`http://localhost:${port}`);
+// })();
+
+import { Server } from "http";
+import { AddressInfo } from "net";
+import path from "path";
+
+import express from "express";
+
+import getAddress from "../node/address";
+import httpServer from "../node/http-server";
+import open from "../node/open";
+
+import { router } from "./hmr";
+// import router from "./router";
+
+const config = {
+  port: 3000,
+};
+
+export default async (
+  middlewares?: express.RequestHandler[]
+): Promise<Server> => {
+  const app = express();
+
+  app.use(router);
+
+  if (process.env.NODE_ENV !== "development") {
+    app.use(express.static(path.join(__dirname, "public")));
+  }
+
+  middlewares?.forEach((middleware) => app.use(middleware));
+
+  const server = await httpServer(config, app);
+
+  const { port } = server.address() as AddressInfo; // assume TCP (not IPC)
+
+  console.log(
+    `listening at:
+- http://localhost:${port}`
   );
+
+  const address = getAddress();
+  if (address) {
+    console.log(`- http://${address}:${port}`);
+  }
+
+  await open(`http://localhost:${port}`);
 
   return server;
 };

@@ -1,3 +1,5 @@
+// TODO
+
 if (module.hot) {
   module.hot.accept("./router");
 
@@ -5,5 +7,7 @@ if (module.hot) {
     router: (...args) => require("./router").default(...args),
   };
 } else {
-  // TODO
+  module.exports = {
+    router: require("./router").default,
+  };
 }
