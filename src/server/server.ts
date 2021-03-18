@@ -36,9 +36,9 @@ import path from "path";
 
 import express from "express";
 
-import getAddress from "../node/address";
-import httpServer from "../node/http-server";
-import open from "../node/open";
+import getAddress from "../../lib/node/address";
+import httpServer from "../../lib/node/http-server";
+import open from "../../lib/node/open";
 
 import { router } from "./hmr";
 // import router from "./router";
