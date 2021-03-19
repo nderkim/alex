@@ -16,7 +16,7 @@ const { watchOptions } = serverConfig;
 const serverCompiler = webpack(serverConfig);
 const clientCompiler = webpack(clientConfig);
 
-let isInitialised;
+let serverHmr;
 
 const callback = (err, stats) => {
   if (err) throw err;
@@ -27,13 +27,16 @@ const callback = (err, stats) => {
     })
   );
 
-  if (!isInitialised) {
-    require(stats.toJson().outputPath).default([
+  if (serverHmr) {
+    serverHmr.check();
+  } else {
+    const { Server, hmr } = require(stats.toJson().outputPath);
+    Server([
       webpackDevMiddleware(clientCompiler),
       webpackHotMiddleware(clientCompiler),
     ]);
 
-    isInitialised = true;
+    serverHmr = hmr;
   }
 };
 
