@@ -1,8 +1,7 @@
+const EventEmitter = require("events");
 const path = require("path");
 
 const webpack = require("webpack");
-const webpackDevMiddleware = require("webpack-dev-middleware");
-const webpackHotMiddleware = require("webpack-hot-middleware");
 
 // relative to cwd
 const serverConfigPath = path.resolve("./config/webpack.server.config");
@@ -11,14 +10,18 @@ const clientConfigPath = path.resolve("./config/webpack.client.config");
 const serverConfig = require(serverConfigPath);
 const clientConfig = require(clientConfigPath);
 
-const { watchOptions } = serverConfig;
+const { watchOptions: serverWatchOptions } = serverConfig;
+const { watchOptions: clientWatchOptions } = clientConfig;
 
 const serverCompiler = webpack(serverConfig);
 const clientCompiler = webpack(clientConfig);
 
-let serverHmr;
+const ee = new EventEmitter();
 
-const callback = (err, stats) => {
+const functionIterator = (iterator) => (...args) =>
+  iterator.next().value(...args);
+
+const serverInit = (err, stats) => {
   if (err) throw err;
 
   console.log(
@@ -27,17 +30,42 @@ const callback = (err, stats) => {
     })
   );
 
-  if (serverHmr) {
-    serverHmr.check();
-  } else {
-    const { Server, hmr } = require(stats.toJson().outputPath);
-    Server([
-      webpackDevMiddleware(clientCompiler),
-      webpackHotMiddleware(clientCompiler),
-    ]);
-
-    serverHmr = hmr;
-  }
+  const Server = require(stats.toJson().outputPath).default;
+  Server(ee);
 };
 
-serverCompiler.watch(watchOptions, callback);
+const serverCompileListener = (err, stats) => {
+  if (err) throw err;
+
+  console.log(
+    stats.toString({
+      colors: true,
+    })
+  );
+
+  ee.emit("server");
+};
+
+serverCompiler.watch(
+  serverWatchOptions,
+  functionIterator(
+    (function* () {
+      yield serverInit;
+      while (true) yield serverCompileListener;
+    })()
+  )
+);
+
+const clientCompileListener = (err, stats) => {
+  if (err) throw err;
+
+  console.log(
+    stats.toString({
+      colors: true,
+    })
+  );
+
+  ee.emit("client");
+};
+
+clientCompiler.watch(clientWatchOptions, clientCompileListener);

@@ -5,7 +5,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
-    "types": [],
+    "types": ["webpack-env"],
     "jsx": "react"
   }
 }

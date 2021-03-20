@@ -36,31 +36,42 @@ import path from "path";
 
 import express from "express";
 
+import voidify from "../../lib/common/voidify";
+
 import getAddress from "../../lib/node/address";
 import httpServer from "../../lib/node/http-server";
 import open from "../../lib/node/open";
+import wsUpgradeListener from "../../lib/node/ws-upgrade-listener";
 
 import { router } from "./hmr";
-// import router from "./router";
+
+const check = async (autoApply = true) => {
+  const outdatedModules = await module.hot?.check(autoApply);
+  if (outdatedModules) console.log("[HMR] updated", outdatedModules);
+};
 
 const config = {
   port: 3000,
 };
 
-export default async (
-  middlewares?: express.RequestHandler[]
-): Promise<Server> => {
+export default async (compiler?: NodeJS.EventEmitter): Promise<Server> => {
+  compiler?.on("server", voidify(check));
+
   const app = express();
 
   app.use(router);
 
-  if (process.env.NODE_ENV !== "development") {
-    app.use(express.static(path.join(__dirname, "public")));
-  }
+  app.use(express.static(path.join(__dirname, "public")));
 
-  middlewares?.forEach((middleware) => app.use(middleware));
-
-  const server = await httpServer(config, app);
+  const server = await httpServer(
+    config,
+    app,
+    wsUpgradeListener((ws) => {
+      const compileListener = () => ws.send("compile");
+      compiler?.on("client", compileListener);
+      ws.onclose = () => compiler?.off("client", compileListener);
+    })
+  );
 
   const { port } = server.address() as AddressInfo; // assume TCP (not IPC)
 

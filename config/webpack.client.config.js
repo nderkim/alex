@@ -10,9 +10,7 @@ const isDev = process.env.NODE_ENV === "development";
 module.exports = {
   // target: "web", // default
   mode: process.env.NODE_ENV,
-  entry: [isDev && "webpack-hot-middleware/client", "./src/client"].filter(
-    Boolean
-  ),
+  entry: "./src/client",
   output: {
     path: path.resolve(isDev ? "./build/public" : "./dist/public"),
   },
