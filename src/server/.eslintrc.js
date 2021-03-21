@@ -2,11 +2,7 @@ module.exports = {
   overrides: [
     {
       files: ["**"],
-      excludedFiles: [
-        ".*rc.js",
-        "*.config.js",
-        "hmr.js", // TODO
-      ],
+      excludedFiles: [".*rc.js", "*.config.js"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         tsconfigRootDir: __dirname,

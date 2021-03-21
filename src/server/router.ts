@@ -1,9 +1,9 @@
-import { Router } from "express";
+import http from "http";
 
-const router = Router();
+export default (req: http.IncomingMessage, res: http.ServerResponse): void => {
+  const { method, url } = req;
 
-router.get("/hello", (req, res) => {
-  res.send("Hello, world!");
-});
-
-export default router;
+  if (url === "/hello" && method === "GET") {
+    res.end("Hello, world!");
+  }
+};

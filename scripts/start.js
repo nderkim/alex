@@ -1,5 +1,12 @@
+process.env.NODE_ENV = "development";
+
 const EventEmitter = require("events");
+// const inspector = require("inspector");
 const path = require("path");
+
+// TODO
+// inspector.open();
+// console.log(inspector.url());
 
 const webpack = require("webpack");
 
@@ -16,6 +23,9 @@ const { watchOptions: clientWatchOptions } = clientConfig;
 const serverCompiler = webpack(serverConfig);
 const clientCompiler = webpack(clientConfig);
 
+let serverCompilationHash;
+let clientCompilationHash;
+
 const ee = new EventEmitter();
 
 const functionIterator = (iterator) => (...args) =>
@@ -30,8 +40,11 @@ const serverInit = (err, stats) => {
     })
   );
 
-  const Server = require(stats.toJson().outputPath).default;
+  const modulePath = stats.toJson().outputPath;
+  const Server = require(modulePath).default;
   Server(ee);
+
+  serverCompilationHash = stats.compilation.hash;
 };
 
 const serverCompileListener = (err, stats) => {
@@ -43,7 +56,25 @@ const serverCompileListener = (err, stats) => {
     })
   );
 
-  ee.emit("server");
+  const hash = stats.compilation.hash;
+
+  if (hash !== serverCompilationHash) ee.emit("server");
+  serverCompilationHash = hash;
+};
+
+const clientCompileListener = (err, stats) => {
+  if (err) throw err;
+
+  console.log(
+    stats.toString({
+      colors: true,
+    })
+  );
+
+  const hash = stats.compilation.hash;
+
+  if (hash !== clientCompilationHash) ee.emit("client");
+  clientCompilationHash = hash;
 };
 
 serverCompiler.watch(
@@ -55,17 +86,5 @@ serverCompiler.watch(
     })()
   )
 );
-
-const clientCompileListener = (err, stats) => {
-  if (err) throw err;
-
-  console.log(
-    stats.toString({
-      colors: true,
-    })
-  );
-
-  ee.emit("client");
-};
 
 clientCompiler.watch(clientWatchOptions, clientCompileListener);

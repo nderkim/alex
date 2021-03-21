@@ -1,3 +1,5 @@
+process.env.NODE_ENV = "production";
+
 const path = require("path");
 
 const pkg = require("pkg");

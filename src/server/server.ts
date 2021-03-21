@@ -1,46 +1,15 @@
-// import net from "net";
-// import path from "path";
-
-// import getAddress from "../node/address";
-// import open from "../node/open";
-
-// import Server from "./server";
-
-// const config = {
-//   dirPath: path.join(__dirname, "../public"),
-//   host: "0.0.0.0",
-//   port: 2539,
-// };
-
-// void (async () => {
-//   const server = await Server(config);
-
-//   const { port } = server.address() as net.AddressInfo; // HACK: assumes TCP (not IPC)
-
-//   console.log(
-//     `listening at:
-// - http://localhost:${port}`
-//   );
-
-//   const address = getAddress();
-//   if (address) {
-//     console.log(`- http://${address}:${port}`);
-//   }
-
-//   await open(`http://localhost:${port}`);
-// })();
-
 import { Server } from "http";
 import { AddressInfo } from "net";
 import path from "path";
 
-import express from "express";
-
+import Middleware from "../../lib/common/middleware";
 import voidify from "../../lib/common/voidify";
 
 import getAddress from "../../lib/node/address";
+import debugMiddleware from "../../lib/node/debug-middleware";
 import httpServer from "../../lib/node/http-server";
 import open from "../../lib/node/open";
+import StaticMiddleware from "../../lib/node/static-middleware";
 import wsUpgradeListener from "../../lib/node/ws-upgrade-listener";
 
 import { router } from "./hmr";
@@ -51,21 +20,21 @@ const check = async (autoApply = true) => {
 };
 
 const config = {
+  host: "localhost",
   port: 3000,
+  dirPath: path.join(__dirname, "public"),
 };
 
 export default async (compiler?: NodeJS.EventEmitter): Promise<Server> => {
   compiler?.on("server", voidify(check));
 
-  const app = express();
-
-  app.use(router);
-
-  app.use(express.static(path.join(__dirname, "public")));
-
   const server = await httpServer(
-    config,
-    app,
+    { host: config.host, port: config.port },
+    voidify(
+      Middleware([debugMiddleware, router, StaticMiddleware(config.dirPath)], {
+        shouldBreak: (_req, res) => res.writableEnded,
+      })
+    ),
     wsUpgradeListener((ws) => {
       const compileListener = () => ws.send("compile");
       compiler?.on("client", compileListener);
