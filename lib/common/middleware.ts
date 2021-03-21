@@ -1,4 +1,4 @@
-import { Awaitable } from "./types";
+import { Awaitable } from "./type-helpers";
 
 export default <T extends unknown[]>(
   middlewares: ((...args: T) => Awaitable<unknown>)[],

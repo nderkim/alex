@@ -3,7 +3,7 @@ import { AddressInfo } from "net";
 import path from "path";
 
 import Middleware from "../../lib/common/middleware";
-import voidify from "../../lib/common/voidify";
+import { isTruthy, voidify } from "../../lib/common/type-helpers";
 
 import getAddress from "../../lib/node/address";
 import debugMiddleware from "../../lib/node/debug-middleware";
@@ -31,9 +31,16 @@ export default async (compiler?: NodeJS.EventEmitter): Promise<Server> => {
   const server = await httpServer(
     { host: config.host, port: config.port },
     voidify(
-      Middleware([debugMiddleware, router, StaticMiddleware(config.dirPath)], {
-        shouldBreak: (_req, res) => res.writableEnded,
-      })
+      Middleware(
+        [
+          process.env.NODE_ENV === "development" && debugMiddleware,
+          router,
+          StaticMiddleware(config.dirPath),
+        ].filter(isTruthy),
+        {
+          shouldBreak: (_req, res) => res.writableEnded,
+        }
+      )
     ),
     wsUpgradeListener((ws) => {
       const compileListener = () => ws.send("compile");

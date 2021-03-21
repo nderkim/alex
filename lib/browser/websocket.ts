@@ -1,4 +1,4 @@
-import { Awaitable, PubSub } from "../common/types";
+import { Awaitable, PubSub } from "../common/type-helpers";
 
 const withRetries = <A extends unknown[], T>(
   fn: (...args: A) => Awaitable<T>,

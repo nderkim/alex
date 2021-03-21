@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PubSub } from "../../../../lib/common/types";
+import { PubSub } from "../../../../lib/common/type-helpers";
 
 import Input, { HandleType as InputHandleType } from "./input";
 

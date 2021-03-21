@@ -1,6 +1,6 @@
 import React from "react";
 
-import voidify from "../../../../lib/common/voidify";
+import { voidify } from "../../../../lib/common/type-helpers";
 
 const Component: React.FC = () => {
   const [data, setData] = React.useState<string>();
