@@ -1,9 +1,11 @@
 import http from "http";
-import net from "net";
+
+import type { IncomingMessage, RequestListener, Server } from "http";
+import type { Socket } from "net";
 
 export type UpgradeListener = (
-  request: http.IncomingMessage,
-  socket: net.Socket,
+  request: IncomingMessage,
+  socket: Socket,
   head: Buffer
 ) => void;
 
@@ -12,9 +14,9 @@ export default async (
     host?: string;
     port?: number;
   } | null,
-  requestListener?: http.RequestListener,
+  requestListener?: RequestListener,
   upgradeListener?: UpgradeListener
-): Promise<http.Server> => {
+): Promise<Server> => {
   const {
     host = "localhost",
     port, // If port is omitted or is 0, the operating system will assign an arbitrary unused port, which can be retrieved by using server.address().port after the 'listening' event has been emitted.

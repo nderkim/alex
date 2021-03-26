@@ -1,10 +1,9 @@
-import http from "http";
-
 import WebSocket from "ws";
 
-import { UpgradeListener } from "./http-server";
+import type { IncomingMessage } from "http";
+import type { UpgradeListener } from "./http-server";
 
-type ConnectionHandler = (ws: WebSocket, req: http.IncomingMessage) => void;
+type ConnectionHandler = (ws: WebSocket, req: IncomingMessage) => void;
 
 export default (connectionHandler: ConnectionHandler): UpgradeListener => {
   const ws = new WebSocket.Server({ noServer: true });

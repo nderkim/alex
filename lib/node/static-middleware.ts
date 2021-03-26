@@ -1,12 +1,13 @@
 import fs from "fs";
-import http from "http";
 import path from "path";
 
 import pipe from "./pipe";
 
+import type { IncomingMessage, ServerResponse } from "http";
+
 export default (dirPath: string) => async (
-  req: http.IncomingMessage,
-  res: http.ServerResponse
+  req: IncomingMessage,
+  res: ServerResponse
 ): Promise<void> => {
   const { url, method } = req;
 
@@ -20,7 +21,7 @@ export default (dirPath: string) => async (
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ENOENT") return; // No such file or directory
 
-    res.statusCode = 500; //Internal Server Error
+    res.statusCode = 500; // Internal Server Error
     // res.statusMessage = http.STATUS_CODES[res.statusCode]; // If this is left as undefined then the standard message for the status code will be used.
     res.end();
   }

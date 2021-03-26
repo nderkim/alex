@@ -1,6 +1,6 @@
-import http from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 
-export default (req: http.IncomingMessage, res: http.ServerResponse): void => {
+export default (req: IncomingMessage, res: ServerResponse): void => {
   const { method, url } = req;
 
   if (url === "/hello" && method === "GET") {

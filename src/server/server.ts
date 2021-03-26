@@ -12,7 +12,7 @@ import open from "../../lib/node/open";
 import StaticMiddleware from "../../lib/node/static-middleware";
 import wsUpgradeListener from "../../lib/node/ws-upgrade-listener";
 
-import { router } from "./hmr";
+import { cors, router } from "./hmr";
 
 const check = async (autoApply = true) => {
   const outdatedModules = await module.hot?.check(autoApply);
@@ -34,6 +34,7 @@ export default async (compiler?: NodeJS.EventEmitter): Promise<Server> => {
       Middleware(
         [
           process.env.NODE_ENV === "development" && debugMiddleware,
+          cors,
           router,
           StaticMiddleware(config.dirPath),
         ].filter(isTruthy),
