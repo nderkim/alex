@@ -2,6 +2,7 @@ import { Server } from "http";
 import { AddressInfo } from "net";
 import path from "path";
 
+import { check } from "../../lib/common/hmr";
 import Middleware from "../../lib/common/middleware";
 import { isTruthy, voidify } from "../../lib/common/type-helpers";
 
@@ -12,12 +13,7 @@ import open from "../../lib/node/open";
 import StaticMiddleware from "../../lib/node/static-middleware";
 import wsUpgradeListener from "../../lib/node/ws-upgrade-listener";
 
-import { cors, router } from "./hmr";
-
-const check = async (autoApply = true) => {
-  const outdatedModules = await module.hot?.check(autoApply);
-  if (outdatedModules) console.log("[HMR] updated", outdatedModules);
-};
+import { cors, router } from "./modules";
 
 const config = {
   host: "localhost",
@@ -44,7 +40,7 @@ export default async (compiler?: NodeJS.EventEmitter): Promise<Server> => {
       )
     ),
     wsUpgradeListener((ws) => {
-      const compileListener = () => ws.send("compile");
+      const compileListener = () => ws.send("[HMR]");
       compiler?.on("client", compileListener);
       ws.onclose = () => compiler?.off("client", compileListener);
     })

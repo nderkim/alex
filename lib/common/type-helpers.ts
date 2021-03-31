@@ -1,5 +1,10 @@
-export type Maybe<T> = T | undefined;
+export type Nullish = null | undefined;
+export type Falsy = false | 0 | "" | Nullish;
+export type Maybe<T> = T | Nullish;
+
 export type Awaitable<T> = Promise<T> | T;
+
+export const isTruthy = <T>(x: T | Falsy): x is T => Boolean(x);
 
 type Publish<T> = (data: T) => void;
 type Callback<T> = (data: T) => void;
@@ -9,10 +14,6 @@ export type PubSub<T> = {
   publish: Publish<T>;
   subscribe: Subscribe<T>;
 };
-
-type Nullish = null | undefined;
-type Falsy = false | 0 | "" | Nullish;
-export const isTruthy = <T>(x: T | Falsy): x is T => Boolean(x);
 
 // void async function (fire and forget)
 export const voidify = <Args extends unknown[], Result>(

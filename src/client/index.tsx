@@ -1,5 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
+
+import { check } from "../../lib/common/hmr";
+
 import "./style.css";
 import App from "./App";
 
@@ -9,10 +12,7 @@ socket.onopen = () => {
 };
 
 if (process.env?.NODE_ENV === "development") {
-  socket.onmessage = async ({ data }) => {
-    const outdatedModules = await module.hot?.check(true);
-    if (outdatedModules) console.log("[HMR] updated", outdatedModules);
-  };
+  socket.onmessage = ({ data }) => data === "[HMR]" && check();
 }
 
 render(
