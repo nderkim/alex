@@ -17,6 +17,7 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
+    "install": "node scripts/install",
     "clean": "node scripts/clean"
   },
   "devDependencies": {
