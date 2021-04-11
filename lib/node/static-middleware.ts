@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import pipe from "./pipe";
+import { pipe } from "../common/stream";
 
 import type { IncomingMessage, ServerResponse } from "http";
 

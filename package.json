@@ -30,8 +30,8 @@
     "@types/react-dom": "^17.0.1",
     "@types/webpack-env": "^1.16.0",
     "@types/ws": "^7.4.0",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^8.0.0",
     "css-loader": "^5.1.0",
@@ -46,8 +46,8 @@
     "prettier": "^2.2.1",
     "react-refresh": "^0.9.0",
     "style-loader": "^2.0.0",
-    "ts-loader": "^8.0.17",
-    "typescript": "^4.1.5",
+    "ts-loader": "^8.1.0",
+    "typescript": "^4.2.4",
     "webpack": "^5.23.0"
   },
   "dependencies": {
